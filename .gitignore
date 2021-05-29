@@ -1,0 +1,16 @@
+.vs
+
+WalletPlanifier/bin
+WalletPlanifier/obj
+
+WalletPlanifier.BusinessLogic/bin
+WalletPlanifier.BusinessLogic/obj
+
+WalletPlanifier.Common/bin
+WalletPlanifier.Common/obj
+
+WalletPlanifier.DataAccess/bin
+WalletPlanifier.DataAccess/obj
+
+WalletPlanifier.Domain/bin
+WalletPlanifier.Domain/obj
