@@ -1,13 +1,18 @@
+.vs
 
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,macos,windows,linux,rider
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,visualstudiocode,macos,windows,linux,rider
+WalletPlanifier/bin
+WalletPlanifier/obj
 
-### Linux ###
-*~
+WalletPlanifier.BusinessLogic/bin
+WalletPlanifier.BusinessLogic/obj
 
+WalletPlanifier.Common/bin
+WalletPlanifier.Common/obj
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
 
+WalletPlanifier.DataAccess/bin
+WalletPlanifier.DataAccess/obj
 # KDE directory preferences
 .directory
 
@@ -525,3 +530,5 @@ FodyWeavers.xsd
 *.tlog
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,macos,windows,linux,rider
+WalletPlanifier.Domain/bin
+WalletPlanifier.Domain/obj

@@ -4,4 +4,21 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="C:\Users\famil\.nuget\packages\mysql.data.entityframework\8.0.25\contentFiles\any\netstandard2.1\app.config.transform" />
+    <Content Remove="C:\Users\famil\.nuget\packages\mysql.data.entityframework\8.0.25\contentFiles\any\netstandard2.1\web.config.transform" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.15" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="3.1.12.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WalletPlanifier.Common\WalletPlanifier.Common.csproj" />
+    <ProjectReference Include="..\WalletPlanifier.Domain\WalletPlanifier.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
