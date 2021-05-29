@@ -9,4 +9,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WalletPlanifier.Common\WalletPlanifier.Common.csproj" />
+    <ProjectReference Include="..\WalletPlanifier.DataAccess\WalletPlanifier.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,15 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WalletPlanifier.Common.Models.Pagination;
-using WalletPlanifier.Common.Models.Pagination.Contracts;
-using WalletPlanifier.Common.Extensions;
-using WalletPlanifier.DataAccess.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using WalletPlanifier.Domain;
 using WalletPlanifier.Common.Models;
+using WalletPlanifier.Common.Models.Pagination;
+using WalletPlanifier.Common.Models.Pagination.Contracts;
+using WalletPlanifier.DataAccess.Repositories.Contracts;
 
 namespace WalletPlanifier.DataAccess.Repositories
 {
@@ -84,7 +81,7 @@ namespace WalletPlanifier.DataAccess.Repositories
         {
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
-            var results = transform(query);            
+            var results = transform(query);
 
             return results.ToArray().ToList();
         }
@@ -100,7 +97,7 @@ namespace WalletPlanifier.DataAccess.Repositories
         {
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
-            var results = transform(query);            
+            var results = transform(query);
 
             return new PagedList<TEntity>(results, startRowIndex, pageSize);
         }
@@ -144,7 +141,7 @@ namespace WalletPlanifier.DataAccess.Repositories
 
         public bool Exists(Expression<Func<TEntity, bool>> filter = null)
         {
-            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);            
+            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
             return query.Any();
         }

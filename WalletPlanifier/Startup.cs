@@ -27,6 +27,8 @@ namespace WalletPlanifier
 
             services.AddRespositories(Configuration);
 
+            services.AddServices();
+
             services.AddCors();
 
             services.AddHttpContextAccessor();
