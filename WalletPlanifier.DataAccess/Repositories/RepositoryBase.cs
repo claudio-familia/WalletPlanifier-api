@@ -60,7 +60,7 @@ namespace WalletPlanifier.DataAccess.Repositories
 
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return _DbSet.AsNoTracking().Where(x => x.Active.Value).ToList();
+            return _DbSet.AsNoTracking().Where(x => x.IsDeleted == false).ToList();
         }
 
         public IPagedList<TEntity> GetPaged(int startRowIndex, int pageSize)
