@@ -26,11 +26,11 @@ namespace WalletPlanifier.DataAccess
                 {
                     if (auditableEntity.State == EntityState.Added)
                     {
-                        auditableEntity.Entity.CreationDate = DateTime.Now;                        
+                        auditableEntity.Entity.CreationTime = DateTime.Now;                        
                     }                    
 
-                    auditableEntity.Entity.UpdatedDate = DateTime.Now;
-                    auditableEntity.Entity.UpdatedBy = _currentUserService.UserId.HasValue ? 
+                    auditableEntity.Entity.LastModificationTime = DateTime.Now;
+                    auditableEntity.Entity.LastModifierUserId = _currentUserService.UserId.HasValue ? 
                                                                 _currentUserService.UserId.Value : 0;
                 }
             }
