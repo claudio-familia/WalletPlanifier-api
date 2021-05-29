@@ -1,13 +1,8 @@
-﻿using WalletPlanifier.Common.Services.Contracts;
-using WalletPlanifier.Domain;
-using WalletPlanifier.Domain.General;
-using WalletPlanifier.Domain.Purchase;
-using WalletPlanifier.Domain.Sale;
-using WalletPlanifier.Domain.Security;
-using WalletPlanifier.Domain.Warehouse;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using WalletPlanifier.Common.Models;
+using WalletPlanifier.Common.Services.Contracts;
 
 namespace WalletPlanifier.DataAccess
 {
@@ -15,14 +10,14 @@ namespace WalletPlanifier.DataAccess
     {
         private readonly ICurrentUserService _currentUserService;
         public WalletPlanifierDBContext(DbContextOptions<WalletPlanifierDBContext> options,
-                                 ICurrentUserService currentUserService) : base(options)
+                                        ICurrentUserService currentUserService) : base(options)
         {
             _currentUserService = currentUserService;
         }
 
         #region Save Changes
         public override int SaveChanges()
-        {            
+        {
             var auditableEntitySet = ChangeTracker.Entries<IAuditableEntity>();
 
             if (auditableEntitySet != null)
@@ -31,12 +26,12 @@ namespace WalletPlanifier.DataAccess
                 {
                     if (auditableEntity.State == EntityState.Added)
                     {
-                        auditableEntity.Entity.CreatedAt = DateTime.Now;
-                        auditableEntity.Entity.CreatedBy = _currentUserService.UserId.Value;
-                    }
+                        auditableEntity.Entity.CreationDate = DateTime.Now;                        
+                    }                    
 
-                    auditableEntity.Entity.UpdatedAt = DateTime.Now;
-                    auditableEntity.Entity.UpdatedBy = _currentUserService.UserId;
+                    auditableEntity.Entity.UpdatedDate = DateTime.Now;
+                    auditableEntity.Entity.UpdatedBy = _currentUserService.UserId.HasValue ? 
+                                                                _currentUserService.UserId.Value : 0;
                 }
             }
 
@@ -45,34 +40,5 @@ namespace WalletPlanifier.DataAccess
 
         #endregion
 
-        #region Security
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<User> Users { get; set; }
-        #endregion
-
-        #region General
-        public DbSet<Parameter> Parameters { get; set; }
-        public DbSet<Place> Places { get; set; }
-        public DbSet<Person> People { get; set; }
-        #endregion
-
-        #region Purchase
-        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
-        public DbSet<PurchaseOrderLine> PurchaseOrderLines { get; set; }
-        public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<SupplierItem> SupplierItems { get; set; }
-        #endregion
-
-        #region Sale
-        public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<InvoiceLine> InvoiceLines { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderLine> OrderLines { get; set; }
-        #endregion
-
-        #region Warehouse
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Item> Items { get; set; }
-        #endregion
     }
 }

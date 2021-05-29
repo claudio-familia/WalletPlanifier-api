@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using WalletPlanifier.DataAccess.Repositories.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using WalletPlanifier.DataAccess.Repositories.Contracts;
 
 namespace WalletPlanifier.DataAccess.Repositories
 {

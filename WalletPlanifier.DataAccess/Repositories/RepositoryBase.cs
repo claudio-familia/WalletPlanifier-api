@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using WalletPlanifier.Domain;
+using WalletPlanifier.Common.Models;
 
 namespace WalletPlanifier.DataAccess.Repositories
 {
@@ -60,36 +61,32 @@ namespace WalletPlanifier.DataAccess.Repositories
             return entity;
         }
 
-        public virtual IEnumerable<TEntity> GetAll(string sortExpression = null)
+        public virtual IEnumerable<TEntity> GetAll()
         {
-            return _DbSet.AsNoTracking().Where(x => x.Active.Value).OrderBy(sortExpression).ToList();
+            return _DbSet.AsNoTracking().Where(x => x.Active.Value).ToList();
         }
 
-        public IPagedList<TEntity> GetPaged(int startRowIndex, int pageSize, string sortExpression = null)
+        public IPagedList<TEntity> GetPaged(int startRowIndex, int pageSize)
         {
-            return new PagedList<TEntity>(_DbSet.AsNoTracking().OrderBy(sortExpression), startRowIndex, pageSize);
+            return new PagedList<TEntity>(_DbSet.AsNoTracking(), startRowIndex, pageSize);
         }
 
-        public IEnumerable<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null, string sortExpression = null)
+        public IEnumerable<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
-            var query = filter == null ? _DbSet.AsNoTracking().OrderBy(sortExpression) : _DbSet.AsNoTracking().Where(filter).OrderBy(sortExpression);
+            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
-            var notSortedResults = transform(query);
+            var results = transform(query);
 
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-
-            return sortedResults.ToArray().ToList();
+            return results.ToArray().ToList();
         }
 
-        public IEnumerable<TResult> GetAll<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, string sortExpression = null)
+        public IEnumerable<TResult> GetAll<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
-            var query = filter == null ? _DbSet.AsNoTracking().OrderBy(sortExpression) : _DbSet.AsNoTracking().Where(filter).OrderBy(sortExpression);
+            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
-            var notSortedResults = transform(query);
+            var results = transform(query);            
 
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-
-            return sortedResults.ToArray().ToList();
+            return results.ToArray().ToList();
         }
 
         public int GetCount<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
@@ -99,26 +96,22 @@ namespace WalletPlanifier.DataAccess.Repositories
             return transform(query).Count();
         }
 
-        public IPagedList<TEntity> GetPaged(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null, int startRowIndex = -1, int pageSize = -1, string sortExpression = null)
-        {
-            var query = filter == null ? _DbSet.AsNoTracking().OrderBy(sortExpression) : _DbSet.AsNoTracking().Where(filter).OrderBy(sortExpression);
-
-            var notSortedResults = transform(query);
-
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-
-            return new PagedList<TEntity>(sortedResults, startRowIndex, pageSize);
-        }
-
-        public IPagedList<TResult> GetPaged<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, int startRowIndex = -1, int pageSize = -1, string sortExpression = null)
+        public IPagedList<TEntity> GetPaged(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null, int startRowIndex = -1, int pageSize = -1)
         {
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
-            var notSortedResults = transform(query);
+            var results = transform(query);            
 
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
+            return new PagedList<TEntity>(results, startRowIndex, pageSize);
+        }
 
-            return new PagedList<TResult>(sortedResults, startRowIndex, pageSize);
+        public IPagedList<TResult> GetPaged<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, int startRowIndex = -1, int pageSize = -1)
+        {
+            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
+
+            var results = transform(query);
+
+            return new PagedList<TResult>(results, startRowIndex, pageSize);
         }
 
         public TEntity Get(int id)
@@ -136,15 +129,13 @@ namespace WalletPlanifier.DataAccess.Repositories
             return _DbSet.FirstOrDefault(filter);
         }
 
-        public TResult Get<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, string sortExpression = null)
+        public TResult Get<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             var query = filter == null ? _DbSet : _DbSet.Where(filter);
 
-            var notSortedResults = transform(query);
+            var results = transform(query);
 
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-
-            return sortedResults.FirstOrDefault();
+            return results.FirstOrDefault();
         }
         public bool Exists(int id)
         {
