@@ -5,8 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.15" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.15" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WalletPlanifier.BusinessLogic\WalletPlanifier.BusinessLogic.csproj" />
+    <ProjectReference Include="..\WalletPlanifier.Common\WalletPlanifier.Common.csproj" />
+    <ProjectReference Include="..\WalletPlanifier.DataAccess\WalletPlanifier.DataAccess.csproj" />
   </ItemGroup>
 
 
