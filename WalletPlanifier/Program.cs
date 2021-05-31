@@ -10,7 +10,11 @@ namespace WalletPlanifier
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();         
+            var host = CreateHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<WalletPlanifierDBContext>().Database.Migrate();
+            }
             host.Run();
         }
 
