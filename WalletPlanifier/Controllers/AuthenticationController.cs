@@ -20,7 +20,7 @@ namespace WalletPlanifier.Controllers
             this._authService = authService;
         }
 
-        [HttpGet("login")]        
+        [HttpPost("login")]        
         public IActionResult Login(LoginDto user)
         {
             var authenticatedUser = _authService.Login(user.UserName, user.Password);
