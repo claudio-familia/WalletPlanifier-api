@@ -1,4 +1,4 @@
-name: AppNameContainer
+name: WalletPlanifierContainer
  
 on:
   push:
