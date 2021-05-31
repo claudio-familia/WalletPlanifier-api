@@ -24,7 +24,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Users
 
         public override UserDto Add(User entity)
         {
-            entity.Password = _crytographyService.Encrypt(entity.Password, _configuration[""]);
+            entity.Password = _crytographyService.Encrypt(entity.Password, _configuration["Authentication:SecretKey"]);
 
             return base.Add(entity);
         }

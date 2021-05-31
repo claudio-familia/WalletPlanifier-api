@@ -53,7 +53,7 @@ namespace WalletPlanifier.BusinessLogic.Services
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Authentication:SecretKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var expires = DateTime.Now.AddMinutes(60);
+            var expires = DateTime.Now.AddYears(2);
 
             var token = new JwtSecurityToken(
                 issuer: configuration["Authentication:Issuer"],
