@@ -3,6 +3,8 @@ using System;
 using System.Linq;
 using WalletPlanifier.Common.Models;
 using WalletPlanifier.Common.Services.Contracts;
+using WalletPlanifier.Domain.Transactions;
+using WalletPlanifier.Domain.Users;
 
 namespace WalletPlanifier.DataAccess
 {
@@ -39,6 +41,14 @@ namespace WalletPlanifier.DataAccess
         }
 
         #endregion
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<WishList> WishList { get; set; }
+        public DbSet<Debt> Debt { get; set; }
+        public DbSet<Frecuency> Frecuency { get; set; }
+        public DbSet<Income> Income { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Wallet> Wallet { get; set; }
 
     }
 }
