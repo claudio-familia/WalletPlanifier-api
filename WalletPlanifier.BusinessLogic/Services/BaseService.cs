@@ -29,6 +29,8 @@ namespace WalletPlanifier.BusinessLogic.Services
             {
                 var entity = _mapper.Map<T>(newEntity);
 
+                entity.IsDeleted = false;
+
                 return repository.Add(entity);
             }
             catch (Exception e)
