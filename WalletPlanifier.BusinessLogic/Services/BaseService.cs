@@ -23,13 +23,13 @@ namespace WalletPlanifier.BusinessLogic.Services
             this._mapper = mapper;
         }
 
-        public virtual Dto Add(T entity)
+        public virtual T Add(Dto newEntity)
         {
             try
             {
-                var createdEntity = repository.Add(entity);
+                var entity = _mapper.Map<T>(newEntity);
 
-                return _mapper.Map<Dto>(createdEntity);
+                return repository.Add(entity);
             }
             catch (Exception e)
             {

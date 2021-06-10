@@ -17,7 +17,7 @@ namespace WalletPlanifier.Controllers
         }
 
         [AllowAnonymous]
-        public override IActionResult Post(User entity)
+        public override IActionResult Post(UserDto entity)
         {
             return base.Post(entity);
         }

@@ -7,7 +7,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Contracts
 {
     public interface IBaseService<T, Dto>
     {
-        Dto Add(T entity);
+        T Add(Dto entity);
         Dto Update(T entity);
         IEnumerable<Dto> GetAll();
         IEnumerable<Dto> GetAll(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null);
