@@ -7,12 +7,12 @@ using WalletPlanifier.Domain.Users;
 
 namespace WalletPlanifier.BusinessLogic
 {
-    public class AuthService
+    public class AuthServiceTest
     {
         private readonly LoginDto _loginUser;
         private readonly User _user;
         private readonly Mock<IAuthService> _authService;
-        public AuthService()
+        public AuthServiceTest()
         {
             _loginUser = new LoginDto()
             {
