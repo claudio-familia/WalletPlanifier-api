@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using WalletPlanifier.Domain.Transactions;
 
 namespace WalletPlanifier.Domain.Users
 {
@@ -13,5 +15,7 @@ namespace WalletPlanifier.Domain.Users
         public DateTime BirthDate { get; set; }
         public string Nationality { get; set; }
         public string Profession { get; set; }
+
+        public ICollection<Wallet> Wallets { get; set; }
     }
 }

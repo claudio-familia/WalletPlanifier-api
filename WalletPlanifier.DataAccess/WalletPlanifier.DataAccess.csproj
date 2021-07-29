@@ -25,4 +25,8 @@
     <ProjectReference Include="..\WalletPlanifier.Domain\WalletPlanifier.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\DbConfiguration\" />
+  </ItemGroup>
+
 </Project>

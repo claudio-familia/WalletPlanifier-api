@@ -1,4 +1,5 @@
-﻿using WalletPlanifier.Domain.Users;
+﻿using WalletPlanifier.BusinessLogic.Dto;
+using WalletPlanifier.Domain.Users;
 
 namespace WalletPlanifier.BusinessLogic.Services.Contracts
 {

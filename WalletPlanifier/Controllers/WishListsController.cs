@@ -10,16 +10,10 @@ namespace WalletPlanifier.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UsersController : BaseController<User, UserDto>
+    public class WishListsController : BaseController<WishList, WishListDto>
     {
-        public UsersController(IBaseService<User, UserDto> baseService) : base(baseService)
+        public WishListsController(IBaseService<WishList, WishListDto> baseService) : base(baseService)
         {
-        }
-
-        [AllowAnonymous]
-        public override IActionResult Post(UserDto entity)
-        {
-            return base.Post(entity);
         }
     }
 }

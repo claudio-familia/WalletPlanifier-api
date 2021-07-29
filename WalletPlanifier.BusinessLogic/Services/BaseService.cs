@@ -23,18 +23,27 @@ namespace WalletPlanifier.BusinessLogic.Services
             this._mapper = mapper;
         }
 
-        public virtual Dto Add(T entity)
+        public virtual T Add(Dto newEntity)
         {
             try
             {
-                var createdEntity = repository.Add(entity);
+                var entity = _mapper.Map<T>(newEntity);
 
-                return _mapper.Map<Dto>(createdEntity);
+                entity.IsDeleted = false;
+
+                return repository.Add(entity);
             }
             catch (Exception e)
             {
                 throw new ArgumentException(e.Message);
             }
+        }
+
+        public T Delete(T entity)
+        {
+            entity.IsDeleted = true;
+
+            return repository.Update(entity);
         }
 
         public virtual bool Exists(int id)
@@ -85,13 +94,13 @@ namespace WalletPlanifier.BusinessLogic.Services
             return repository.Get(id);
         }
 
-        public virtual Dto Update(T entity)
+        public virtual T Update(Dto entity)
         {
             try
             {
-                var updatedEntity = repository.Update(entity);
+                var entityToBeUpdated = _mapper.Map<T>(entity);
 
-                return _mapper.Map<Dto>(updatedEntity);
+                return repository.Update(entityToBeUpdated);                
             }
             catch (Exception ex)
             {
