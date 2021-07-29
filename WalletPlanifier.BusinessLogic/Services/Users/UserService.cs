@@ -22,7 +22,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Users
             this._configuration = configuration;
         }
 
-        public override UserDto Add(User entity)
+        public override User Add(UserDto entity)
         {
             entity.Password = _crytographyService.Encrypt(entity.Password, _configuration["Authentication:SecretKey"]);
 

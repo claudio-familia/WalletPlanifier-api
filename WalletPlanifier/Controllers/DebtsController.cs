@@ -3,23 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using WalletPlanifier.BusinessLogic.Dto;
 using WalletPlanifier.BusinessLogic.Services.Contracts;
 using WalletPlanifier.Controllers.Base;
-using WalletPlanifier.Domain.Users;
+using WalletPlanifier.Domain.Transactions;
 
 namespace WalletPlanifier.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UsersController : BaseController<User, UserDto>
+    public class DebtsController : BaseController<Debt, DebtDto>
     {
-        public UsersController(IBaseService<User, UserDto> baseService) : base(baseService)
+        public DebtsController(IBaseService<Debt, DebtDto> baseService) : base(baseService)
         {
-        }
-
-        [AllowAnonymous]
-        public override IActionResult Post(UserDto entity)
-        {
-            return base.Post(entity);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace WalletPlanifier.Controllers.Base
         }
 
         [HttpPost]
-        public virtual IActionResult Post(T entity)
+        public virtual IActionResult Post(Dto entity)
         {
             var response = _baseService.Add(entity);
 
@@ -39,8 +39,8 @@ namespace WalletPlanifier.Controllers.Base
         }
 
         [HttpPut]
-        public virtual IActionResult Put(T entity)
-        {
+        public virtual IActionResult Put(Dto entity)
+        { 
             var response = _baseService.Update(entity);
 
             return Ok(response);
@@ -52,9 +52,7 @@ namespace WalletPlanifier.Controllers.Base
         {
             var entity = _baseService.GetEntity(id);
 
-            entity.IsDeleted = true;
-
-            var response = _baseService.Update(entity);
+            var response = _baseService.Delete(entity);
 
             return Ok(response);
         }
