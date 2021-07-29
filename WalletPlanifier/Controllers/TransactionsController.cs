@@ -39,7 +39,7 @@ namespace WalletPlanifier.Controllers
         }
 
         [HttpPost("{userId}")]
-        public IActionResult ProcessAllUserTransaction(int userId, int transactionId)
+        public IActionResult ProcessAllUserTransaction(int userId)
         {
             return Ok(_baseService.ProcessAllUserTransaction(userId));
         }

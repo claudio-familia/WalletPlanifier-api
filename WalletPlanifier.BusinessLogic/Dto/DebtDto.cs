@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace WalletPlanifier.BusinessLogic.Dto
 {
@@ -12,7 +13,9 @@ namespace WalletPlanifier.BusinessLogic.Dto
         public bool IsFixed { get; set; }
         public DateTime EndDate { get; set; }
 
+        [JsonIgnore]
         public UserDto User { get; set; }
+        [JsonIgnore]
         public FrecuencyDto Frecuency { get; set; }
     }
 }
