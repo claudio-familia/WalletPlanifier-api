@@ -9,7 +9,7 @@
   El software está siendo desarrollado en .NET Core 3.1, utilizando una base de datos con MySQL con una arquitectura de cebolla.
 </p>
 
-h2>Arquitecture</h2>
+<h2>Arquitecture (Arquitectura)</h2>
 <ul>
   <h3>Onion arquitecture</h3>
   <p>
@@ -37,7 +37,7 @@ h2>Arquitecture</h2>
   </p>
 </ul>
 
-<h2>Security</h2>
+<h2>Security (Seguridad)</h2>
 <ul>
   <h3>Json web tokens</h3> 
   <p>
@@ -45,7 +45,7 @@ h2>Arquitecture</h2>
   <p>
 </ul>
 
-<h2>Database</h2>
+<h2>Data persistency (Persistencia de datos)</h2>
 <ul>
   <h3>MySQL</h3> 
   <p>
