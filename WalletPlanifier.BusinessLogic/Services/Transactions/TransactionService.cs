@@ -45,7 +45,6 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
                 if (transaction.DebtId.HasValue)
                 {
-
                     wallet.Total -= transaction.Debt.Amount;
                 }
 
@@ -72,7 +71,6 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
             if (transaction.DebtId.HasValue)
             {
-
                 wallet.Total -= transaction.Debt.Amount;
             }
 
