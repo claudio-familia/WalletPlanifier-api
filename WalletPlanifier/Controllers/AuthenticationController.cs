@@ -27,7 +27,7 @@ namespace WalletPlanifier.Controllers
 
             if (authenticatedUser == null) return Unauthorized("Invalid username or password");
 
-            return Ok(_authService.GenerateJWT(authenticatedUser));
+            return Ok(new { AccessToken = _authService.GenerateJWT(authenticatedUser) });
         }
     }
 }
