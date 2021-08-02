@@ -65,5 +65,10 @@ namespace WalletPlanifier.BusinessLogic.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public JwtPayload GetData(string token)
+        {
+            return new JwtSecurityTokenHandler().ReadJwtToken(token).Payload;
+        }
     }      
 }

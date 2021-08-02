@@ -29,5 +29,17 @@ namespace WalletPlanifier.Controllers
 
             return Ok(new { AccessToken = _authService.GenerateJWT(authenticatedUser) });
         }
+
+        [HttpPost("user")]
+        public IActionResult UserData()
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            
+            var tokenData = _authService.GetData(token);
+
+            if (tokenData == null) return Unauthorized("User is not authenticated");
+
+            return Ok(tokenData);
+        }
     }
 }
