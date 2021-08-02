@@ -30,7 +30,7 @@ namespace WalletPlanifier.Controllers
             return Ok(new { AccessToken = _authService.GenerateJWT(authenticatedUser) });
         }
 
-        [HttpPost("user")]
+        [HttpGet("user")]
         public IActionResult UserData()
         {
             string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
