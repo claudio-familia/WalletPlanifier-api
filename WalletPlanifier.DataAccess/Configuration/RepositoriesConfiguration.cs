@@ -16,6 +16,7 @@ namespace WalletPlanifier.DataAccess.Configuration
             });
 
             services.AddScoped<IDataRepositoryFactory, DataRepositoryFactory>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient(typeof(IDataRepository<>), typeof(Repository<>));
         }
     }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using WalletPlanifier.BusinessLogic.Dto;
 using WalletPlanifier.BusinessLogic.Services.Contracts;
+using WalletPlanifier.Common.Services.Contracts;
 using WalletPlanifier.DataAccess.Repositories.Contracts;
 using WalletPlanifier.Domain.Transactions;
 
@@ -13,14 +14,18 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
     {
         private readonly IDataRepository<Transaction> dataRepository;
         private readonly IDataRepository<Wallet> walletRepository;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
         public TransactionService(IDataRepository<Transaction> dataRepository,
                                   IDataRepository<Wallet> walletRepository,
-                                  IMapper mapper) : base(dataRepository, mapper)
+                                  IUnitOfWork unitOfWork,
+                                  ICurrentUserService currentUser,
+                                  IMapper mapper) : base(dataRepository, mapper, currentUser)
         {
             this.dataRepository = dataRepository;
             this.walletRepository = walletRepository;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
 
@@ -36,10 +41,53 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
         public IEnumerable<TransactionDto> ProcessAllUserTransaction(int userId)
         {
-            var transactions = dataRepository.GetAll(x => x.Include(x => x.Income).Include(x => x.Debt), x => x.UserId == userId);
+            var trans = unitOfWork.CreateTransaction();
 
-            foreach(var transaction in transactions)
+            try
             {
+                var transactions = dataRepository.GetAll(x => x.Include(x => x.Income).Include(x => x.Debt), x => x.UserId == userId);
+
+                foreach(var transaction in transactions)
+                {
+
+                    var wallet = walletRepository.Get(w => w, w => w.Id == transaction.WalletId);
+
+                    if (transaction.DebtId.HasValue)
+                    {
+                        wallet.Total -= transaction.Debt.Amount;
+                    }
+
+                    if (transaction.IncomeId.HasValue)
+                    {
+                        wallet.Total += transaction.Income.Amount;
+                    }
+
+                    transaction.IsCompleted = true;
+                    transaction.CompletedTime = DateTime.Now;
+
+                    walletRepository.Update(wallet);
+                    dataRepository.Update(transaction);
+                }
+
+                trans.Commit();
+
+                return mapper.Map<IEnumerable<TransactionDto>>(transactions);
+            }
+            catch(Exception ex)
+            {
+                trans.Rollback();
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public TransactionDto ProcessTransaction(int userId, int transactionId)
+        {
+            var trans = unitOfWork.CreateTransaction();
+
+            try
+            {
+                var transaction = dataRepository.Get(x => x, x => x.UserId == userId && x.Id == transactionId);
 
                 var wallet = walletRepository.Get(w => w, w => w.Id == transaction.WalletId);
 
@@ -58,34 +106,18 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
                 walletRepository.Update(wallet);
                 dataRepository.Update(transaction);
+
+                trans.Commit();
+
+                return mapper.Map<TransactionDto>(transaction);
             }
-
-            return mapper.Map<IEnumerable<TransactionDto>>(transactions);
-        }
-
-        public TransactionDto ProcessTransaction(int userId, int transactionId)
-        {
-            var transaction = dataRepository.Get(x => x, x => x.UserId == userId && x.Id == transactionId);
-
-            var wallet = walletRepository.Get(w => w, w => w.Id == transaction.WalletId);
-
-            if (transaction.DebtId.HasValue)
+            catch (Exception ex)
             {
-                wallet.Total -= transaction.Debt.Amount;
+                trans.Rollback();
+
+                throw new Exception(ex.Message);
             }
 
-            if (transaction.IncomeId.HasValue)
-            {
-                wallet.Total += transaction.Income.Amount;
-            }
-
-            transaction.IsCompleted = true;
-            transaction.CompletedTime = DateTime.Now;
-
-            walletRepository.Update(wallet);
-            dataRepository.Update(transaction);
-
-            return mapper.Map<TransactionDto>(transaction);
         }
     }    
 }

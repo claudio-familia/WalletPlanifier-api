@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using WalletPlanifier.BusinessLogic.Services.Contracts;
 using WalletPlanifier.Common.Models;
+using WalletPlanifier.Common.Services.Contracts;
 using WalletPlanifier.DataAccess.Repositories.Contracts;
 
 namespace WalletPlanifier.BusinessLogic.Services
@@ -15,12 +16,15 @@ namespace WalletPlanifier.BusinessLogic.Services
     {
         protected readonly IDataRepository<T> repository;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService currentUser;
 
         public BaseService(IDataRepository<T> _repository,
-                           IMapper mapper)
+                           IMapper mapper, 
+                           ICurrentUserService currentUser)
         {
             repository = _repository;
             this._mapper = mapper;
+            this.currentUser = currentUser;
         }
 
         public virtual T Add(Dto newEntity)
@@ -60,12 +64,16 @@ namespace WalletPlanifier.BusinessLogic.Services
         {
             var result = repository.Get(id);
 
+            if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");
+
             return _mapper.Map<Dto>(result);
         }
 
         public virtual Dto Get(Guid id)
         {
             var result = repository.Get(id);
+
+            if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");
 
             return _mapper.Map<Dto>(result);
         }
@@ -77,21 +85,25 @@ namespace WalletPlanifier.BusinessLogic.Services
 
         public virtual IEnumerable<Dto> GetAll()
         {
-            var result = repository.GetAll();
+            var result = repository.GetAll().Where(x => x.CreatorUserId == currentUser.UserId);
 
             return _mapper.Map<IEnumerable<Dto>>(result);
         }
 
         public virtual IEnumerable<Dto> GetAll(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null)
         {
-            var result = repository.GetAll(transform, filter);
+            var result = repository.GetAll(transform, filter).Where(x => x.CreatorUserId == currentUser.UserId);
 
             return _mapper.Map<IEnumerable<Dto>>(result);
         }
 
         public T GetEntity(int id)
         {
-            return repository.Get(id);
+            var result = repository.Get(id);
+
+            if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");
+
+            return result;
         }
 
         public virtual T Update(Dto entity)
