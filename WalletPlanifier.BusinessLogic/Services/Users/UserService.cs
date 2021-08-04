@@ -16,7 +16,8 @@ namespace WalletPlanifier.BusinessLogic.Services.Users
         public UserService(IDataRepository<User> _repository,
                            ICryptographyService crytographyService,
                            IConfiguration configuration,
-                           IMapper mapper) : base(_repository, mapper)
+                           ICurrentUserService currentUser,
+                           IMapper mapper) : base(_repository, mapper, currentUser)
         {
             this._crytographyService = crytographyService;
             this._configuration = configuration;
