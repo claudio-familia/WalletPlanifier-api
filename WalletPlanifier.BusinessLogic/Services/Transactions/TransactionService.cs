@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using WalletPlanifier.BusinessLogic.Dto;
 using WalletPlanifier.BusinessLogic.Services.Contracts;
+using WalletPlanifier.Common.Services.Contracts;
 using WalletPlanifier.DataAccess.Repositories.Contracts;
 using WalletPlanifier.Domain.Transactions;
 
@@ -19,7 +20,8 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
         public TransactionService(IDataRepository<Transaction> dataRepository,
                                   IDataRepository<Wallet> walletRepository,
                                   IUnitOfWork unitOfWork,
-                                  IMapper mapper) : base(dataRepository, mapper)
+                                  ICurrentUserService currentUser,
+                                  IMapper mapper) : base(dataRepository, mapper, currentUser)
         {
             this.dataRepository = dataRepository;
             this.walletRepository = walletRepository;
