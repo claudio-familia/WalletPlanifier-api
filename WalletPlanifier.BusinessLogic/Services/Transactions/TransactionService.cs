@@ -31,12 +31,20 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
         public IEnumerable<TransactionDto> GetAllByClient(int userId)
         {
-            return mapper.Map<IEnumerable<TransactionDto>>(dataRepository.GetAll(x => x, x => x.UserId == userId));
+            return mapper.Map<IEnumerable<TransactionDto>>(dataRepository.GetAll(x => x.Include(i => i.User)
+                                                                                       .Include(i => i.Wallet)
+                                                                                       .Include(i => i.Debt)
+                                                                                       .Include(i => i.Income), 
+                                                                                x => x.UserId == userId));
         }
 
         public TransactionDto GetTransactionById(int userId, int transactionId)
         {
-            return mapper.Map<TransactionDto>(dataRepository.Get(x => x, x => x.UserId == userId && x.Id == transactionId));
+            return mapper.Map<TransactionDto>(dataRepository.Get(x => x.Include(i => i.User)
+                                                                       .Include(i => i.Wallet)
+                                                                       .Include(i => i.Debt)
+                                                                       .Include(i => i.Income), 
+                                                                 x => x.UserId == userId && x.Id == transactionId));
         }
 
         public IEnumerable<TransactionDto> ProcessAllUserTransaction(int userId)
