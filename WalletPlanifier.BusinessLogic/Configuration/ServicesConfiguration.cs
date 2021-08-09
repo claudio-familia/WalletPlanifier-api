@@ -22,7 +22,7 @@ namespace WalletPlanifier.DataAccess.Configuration
             services.AddScoped<IBaseService<User, UserDto>, UserService>();
             services.AddScoped<IBaseService<WishList, WishListDto>, BaseService<WishList, WishListDto>>();
 
-            services.AddScoped<IBaseService<Debt, DebtDto>, BaseService<Debt, DebtDto>>();
+            services.AddScoped<IBaseService<Debt, DebtDto>, DebtService>();
             services.AddScoped<IBaseService<Income, IncomeDto>, IncomeService>();
             services.AddScoped<IBaseService<Frecuency, FrecuencyDto>, BaseService<Frecuency, FrecuencyDto>>();
             services.AddScoped<ITransactionService, TransactionService>();
