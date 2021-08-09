@@ -21,7 +21,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
                                   IDataRepository<Wallet> walletRepository,
                                   IUnitOfWork unitOfWork,
                                   ICurrentUserService currentUser,
-                                  IMapper mapper) : base(dataRepository, mapper, currentUser)
+                                  IMapper mapper) : base(dataRepository, mapper)
         {
             this.dataRepository = dataRepository;
             this.walletRepository = walletRepository;
