@@ -32,6 +32,8 @@ namespace WalletPlanifier.DataAccess
                         auditableEntity.Entity.CreatorUserId = _currentUserService.UserId ?? 0;
                     }
 
+                    auditableEntity.Entity.CreationTime = DateTime.Now;
+                    auditableEntity.Entity.CreatorUserId = _currentUserService.UserId ?? 0;
                     auditableEntity.Entity.LastModificationTime = DateTime.Now;
                     auditableEntity.Entity.LastModifierUserId = _currentUserService.UserId ?? 0;
                 }
