@@ -19,6 +19,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
         private readonly IDataRepository<User> userRepository;
         private readonly IDataRepository<Wallet> walletRepository;
         private readonly IUnitOfWork unitOfWork;
+        private readonly ICurrentUserService currentUser;
         private readonly IDataRepository<Domain.Transactions.Transaction> transactionRepository;
         private readonly IMapper mapper;
 
@@ -28,12 +29,13 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
                                   IUnitOfWork unitOfWork,
                                   ICurrentUserService currentUser,
                                   IDataRepository<Domain.Transactions.Transaction> transactionRepository,
-                                  IMapper mapper) : base(dataRepository, mapper, currentUser)
+                                  IMapper mapper) : base(dataRepository, mapper)
         {
             this.dataRepository = dataRepository;
             this.userRepository = userRepository;
             this.walletRepository = walletRepository;
             this.unitOfWork = unitOfWork;
+            this.currentUser = currentUser;
             this.transactionRepository = transactionRepository;
             this.mapper = mapper;
         }
@@ -71,6 +73,22 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
                 throw new Exception(ex.Message);
             }
+        }
+
+        public override IEnumerable<IncomeDto> GetAll()
+        {
+            var result = repository.GetAll().Where(x => x.CreatorUserId == currentUser.UserId);
+
+            return mapper.Map<IEnumerable<IncomeDto>>(result);
+        }
+
+        public override IncomeDto Get(int id)
+        {
+            var result = dataRepository.Get(id);
+
+            if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");
+
+            return mapper.Map<IncomeDto>(result);
         }
     }
 }
