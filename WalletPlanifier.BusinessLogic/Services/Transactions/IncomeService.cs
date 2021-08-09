@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,14 +78,14 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
         public override IEnumerable<IncomeDto> GetAll()
         {
-            var result = repository.GetAll().Where(x => x.CreatorUserId == currentUser.UserId);
+            var result = repository.GetAll(x => x.Include(i => i.Frecuency)).Where(x => x.CreatorUserId == currentUser.UserId);
 
             return mapper.Map<IEnumerable<IncomeDto>>(result);
         }
 
         public override IncomeDto Get(int id)
         {
-            var result = dataRepository.Get(id);
+            var result = dataRepository.Get(x => x.Include(i => i.Frecuency), x => x.Id == id);
 
             if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");
 
