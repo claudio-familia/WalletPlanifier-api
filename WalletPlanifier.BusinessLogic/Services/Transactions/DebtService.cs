@@ -59,16 +59,17 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
                     Debt = debt,
                     DebtId = debt.Id,
                     IsCompleted = false,
+                    Title = debt.Description,
                     CompletedTime = DateTime.Now,
                     UserId = debt.UserId,
                     WalletId = wallets.FirstOrDefault().Id
                 });
 
-                var result = transactionService.ProcessTransaction(debt.UserId, transaction.Id);
+                var result = transactionService.ProcessSingleTransaction(debt.UserId, transaction.Id);
 
                 trans.Commit();
-                
-                return result;
+
+                return mapper.Map<TransactionDto>(result);
             }
             catch(Exception ex)
             {
@@ -88,7 +89,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
         public override DebtDto Get(int id)
         {
-            var result = dataRepository.Get(x => x.Include(i => i.Frecuency), x => x.Id == id);
+            var result = dataRepository.Get(x => x.Include(i => i.Frecuency).Include(x => x.Transactions), x => x.Id == id);
 
             if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");
 

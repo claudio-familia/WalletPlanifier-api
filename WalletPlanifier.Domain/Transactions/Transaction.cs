@@ -14,6 +14,7 @@ namespace WalletPlanifier.Domain.Transactions
         public bool IsCompleted { get; set; } = false;
         public DateTime? CompletedTime { get; set; }
         public string Description { get; set; }
+        public string Title { get; set; }
         public decimal OriginWalletValue { get; set; }
         public decimal FinalWalletValue { get; set; }
 
