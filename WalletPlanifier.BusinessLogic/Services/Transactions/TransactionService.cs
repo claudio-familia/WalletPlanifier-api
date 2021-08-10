@@ -60,16 +60,21 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
                     var wallet = walletRepository.Get(w => w, w => w.Id == transaction.WalletId);
 
+                    transaction.OriginWalletValue = wallet.Total;
+
                     if (transaction.DebtId.HasValue)
                     {
+                        transaction.Description = "Debt's transaction";
                         wallet.Total -= transaction.Debt.Amount;
                     }
 
                     if (transaction.IncomeId.HasValue)
                     {
+                        transaction.Description = "Income's transaction";
                         wallet.Total += transaction.Income.Amount;
                     }
 
+                    transaction.FinalWalletValue = wallet.Total;
                     transaction.IsCompleted = true;
                     transaction.CompletedTime = DateTime.Now;
 
@@ -99,16 +104,21 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
                 var wallet = walletRepository.Get(w => w, w => w.Id == transaction.WalletId);
 
+                transaction.OriginWalletValue = wallet.Total;
+
                 if (transaction.DebtId.HasValue)
                 {
+                    transaction.Description = "Debt's transaction";
                     wallet.Total -= transaction.Debt.Amount;
                 }
 
                 if (transaction.IncomeId.HasValue)
                 {
+                    transaction.Description = "Income's transaction";
                     wallet.Total += transaction.Income.Amount;
                 }
 
+                transaction.FinalWalletValue = wallet.Total;
                 transaction.IsCompleted = true;
                 transaction.CompletedTime = DateTime.Now;
 
