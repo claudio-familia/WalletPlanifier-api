@@ -17,12 +17,15 @@ namespace WalletPlanifier.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly IDataRepository<Wallet> walletRepository;
+        private readonly IDataRepository<Debt> debtRepository;
         private readonly ICurrentUserService currentUserService;
 
         public DashboardController(IDataRepository<Wallet> walletRepository,
+                                   IDataRepository<Debt> debtRepository,
                                    ICurrentUserService currentUserService)
         {
             this.walletRepository = walletRepository;
+            this.debtRepository = debtRepository;
             this.currentUserService = currentUserService;
         }
 
@@ -32,10 +35,10 @@ namespace WalletPlanifier.Controllers
             return Ok(
                 new
                 {
-                    AvailableMoney = "1,345.00",
-                    SpentMoney = "236.00",
-                    DebtTotal = "398.00",
-                    Debts = new { PendingDebts = "4", PaidDebts = "2" },
+                    AvailableMoney = GetAvailableMoney(),
+                    SpentMoney = GetSpends(),
+                    DebtTotal = GetDebtMoney(),
+                    Debts = new { PendingDebts = GetPendingDebts(), PaidDebts = GetDebtPaids() },
                     Incomes = new { PendingIncomes = "2", recieveIncomes = "1" },
                 });
         }
@@ -58,27 +61,37 @@ namespace WalletPlanifier.Controllers
         }
 
         [HttpGet("available-money")]
-        public IActionResult GetAvailableMoney()
+        public IActionResult AvailableMoney()
         {
-            return Ok("1,345.00");
+            decimal response = GetAvailableMoney();
+
+            return Ok(response);
         }
 
         [HttpGet("spent-money")]
-        public IActionResult GetSpends()
+        public IActionResult Spends()
         {
-            return Ok("236.00");
+            decimal transactions = GetSpends();
+
+            return Ok(transactions);
         }
 
         [HttpGet("debt-money")]
-        public IActionResult GetDebtMoney()
+        public IActionResult DebtMoney()
         {
-            return Ok("398.00");
+            decimal debts = GetDebtMoney();
+
+            return Ok(debts);
         }
 
         [HttpGet("debts")]
         public IActionResult GetDebts()
         {
-            return Ok(new { PendingDebts = "4", PaidDebts = "2" });
+            int pendingDebts = GetPendingDebts();
+
+            int paidDebts = GetDebtPaids();
+
+            return Ok(new { PendingDebts = pendingDebts, PaidDebts = paidDebts });
         }
 
         [HttpGet("incomes")]
@@ -86,5 +99,46 @@ namespace WalletPlanifier.Controllers
         {
             return Ok(new { PendingIncomes = "2", recieveIncomes = "1" });
         }
+
+        private decimal GetAvailableMoney()
+        {
+            decimal response = 0;
+
+            var wallet = walletRepository.GetAll(x => x, x => x.UserId == currentUserService.UserId.Value).FirstOrDefault();
+
+            if (wallet != null) response = wallet.Total;
+            return response;
+        }
+
+        private decimal GetSpends()
+        {
+            return walletRepository.GetAll(x => x.Include(x => x.Transactions),
+                                                                   i => i.UserId == currentUserService.UserId.Value)
+                                                           .SelectMany(x => x.Transactions)
+                                                           .Where(x => x.DebtId.HasValue)
+                                                           .Sum(x => x.OriginWalletValue - x.FinalWalletValue);
+        }
+
+        private decimal GetDebtMoney()
+        {
+            return debtRepository.GetAll(x => x.Include(x => x.Transactions),
+                                                          i => i.UserId == currentUserService.UserId.Value && !i.Transactions.Any())
+                                                   .Sum(x => x.Amount);
+        }
+
+        private int GetPendingDebts()
+        {
+            return debtRepository.GetAll(x => x.Include(x => x.Transactions),
+                                                          i => i.UserId == currentUserService.UserId.Value && !i.Transactions.Any())
+                                                   .Count();
+        }
+
+        private int GetDebtPaids()
+        {
+            return debtRepository.GetAll(x => x.Include(x => x.Transactions),
+                                                          i => i.UserId == currentUserService.UserId.Value && i.Transactions.Any())
+                                                   .Count();
+        }
+        
     }
 }
