@@ -10,6 +10,9 @@ namespace WalletPlanifier.BusinessLogic.Dto
         public int? IncomeId { get; set; }
         public int? DebtId { get; set; }
         public decimal? OriginWalletValue { get; set; }
+        public decimal? FinalWalletValue { get; set; }
+        public string Description { get; set; }
+        public string Title { get; set; }
         public bool IsCompleted { get; set; } = false;
         public DateTime? CompletedTime { get; set; }
 

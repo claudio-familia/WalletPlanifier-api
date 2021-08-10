@@ -1,8 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WalletPlanifier.BusinessLogic.Dto;
+using WalletPlanifier.BusinessLogic.Services.Contracts;
+using WalletPlanifier.Common.Services.Contracts;
+using WalletPlanifier.DataAccess.Repositories.Contracts;
+using WalletPlanifier.Domain.Transactions;
 
 namespace WalletPlanifier.Controllers
 {
@@ -10,8 +16,14 @@ namespace WalletPlanifier.Controllers
     [ApiController]
     public class DashboardController : ControllerBase
     {
-        public DashboardController()
+        private readonly IDataRepository<Wallet> walletRepository;
+        private readonly ICurrentUserService currentUserService;
+
+        public DashboardController(IDataRepository<Wallet> walletRepository,
+                                   ICurrentUserService currentUserService)
         {
+            this.walletRepository = walletRepository;
+            this.currentUserService = currentUserService;
         }
 
         [HttpGet("balance")]
@@ -26,6 +38,23 @@ namespace WalletPlanifier.Controllers
                     Debts = new { PendingDebts = "4", PaidDebts = "2" },
                     Incomes = new { PendingIncomes = "2", recieveIncomes = "1" },
                 });
+        }
+
+        [HttpGet("wallet")]
+        public IActionResult GetWallet()
+        {
+            var transactions = walletRepository.GetAll(x => x.Include(x => x.Transactions),
+                                                       i => i.UserId == currentUserService.UserId.Value)
+                                               .SelectMany(x => x.Transactions)
+                                               .OrderByDescending(x => x.CreationTime)
+                                               .Select(x => new
+                                               {
+                                                   Date = x.CreationTime.ToString("MMM-dd"),
+                                                   Value = x.FinalWalletValue
+                                               })
+                                               .Take(5);            
+
+            return Ok(transactions);
         }
 
         [HttpGet("available-money")]

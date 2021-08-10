@@ -13,6 +13,10 @@ namespace WalletPlanifier.Domain.Transactions
         public int? DebtId { get; set; }
         public bool IsCompleted { get; set; } = false;
         public DateTime? CompletedTime { get; set; }
+        public string Description { get; set; }
+        public string Title { get; set; }
+        public decimal OriginWalletValue { get; set; }
+        public decimal FinalWalletValue { get; set; }
 
         public Income Income { get; set; }
         public Debt Debt { get; set; }

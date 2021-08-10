@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WalletPlanifier.DataAccess;
 
 namespace WalletPlanifier.DataAccess.Migrations
 {
     [DbContext(typeof(WalletPlanifierDBContext))]
-    partial class WalletPlanifierDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210810135944_TransactionNewFields")]
+    partial class TransactionNewFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,7 +183,7 @@ namespace WalletPlanifier.DataAccess.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Descriptiom")
                         .HasColumnType("text");
 
                     b.Property<decimal>("FinalWalletValue")
@@ -204,9 +206,6 @@ namespace WalletPlanifier.DataAccess.Migrations
 
                     b.Property<decimal>("OriginWalletValue")
                         .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

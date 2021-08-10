@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace WalletPlanifier.BusinessLogic.Dto
@@ -14,8 +15,13 @@ namespace WalletPlanifier.BusinessLogic.Dto
         public DateTime EndDate { get; set; }
 
         [JsonIgnore]
+        public DateTime CreationTime { get; set; }
+
+        [JsonIgnore]
         public UserDto User { get; set; }
         [JsonIgnore]
         public FrecuencyDto Frecuency { get; set; }
+        [JsonIgnore]
+        public IEnumerable<TransactionDto> Transactions { get; set; }
     }
 }

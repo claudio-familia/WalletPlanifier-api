@@ -62,15 +62,16 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
                     IncomeId = income.Id,
                     IsCompleted= false,
                     CompletedTime = DateTime.Now,
+                    Title = income.Description,
                     UserId = income.UserId,
                     WalletId = wallets.FirstOrDefault().Id
                 });
 
-                var result = transactionService.ProcessTransaction(income.UserId, transaction.Id);
+                var result = transactionService.ProcessSingleTransaction(income.UserId, transaction.Id);
 
                 trans.Commit();
 
-                return result;
+                return mapper.Map<TransactionDto>(result);
 
             }
             catch (Exception ex)
@@ -92,9 +93,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
         {
             var result = dataRepository.Get(x => x.Include(i => i.Frecuency).Include(x => x.Transactions), x => x.Id == id);            
 
-            if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");
-
-            //result.Transactions = transactionRepository.GetAll(x => x, i => i.IncomeId.Value == result.Id);
+            if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");            
 
             return mapper.Map<IncomeDto>(result);
         }
