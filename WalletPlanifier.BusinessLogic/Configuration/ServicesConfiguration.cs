@@ -26,7 +26,7 @@ namespace WalletPlanifier.DataAccess.Configuration
             services.AddScoped<IIncomeService, IncomeService>();
             services.AddScoped<IBaseService<Frecuency, FrecuencyDto>, BaseService<Frecuency, FrecuencyDto>>();
             services.AddScoped<ITransactionService, TransactionService>();
-            services.AddScoped<IBaseService<Wallet, WalletDto>, BaseService<Wallet, WalletDto>>();
+            services.AddScoped<IBaseService<Wallet, WalletDto>, WalletService>();
         }
     }
 }

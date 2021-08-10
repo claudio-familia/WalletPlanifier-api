@@ -65,12 +65,14 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
                     if (transaction.DebtId.HasValue)
                     {
                         transaction.Description = "Debt's transaction";
+                        transaction.Title = transaction.Debt.Description;
                         wallet.Total -= transaction.Debt.Amount;
                     }
 
                     if (transaction.IncomeId.HasValue)
                     {
                         transaction.Description = "Income's transaction";
+                        transaction.Title = transaction.Income.Description;
                         wallet.Total += transaction.Income.Amount;
                     }
 
@@ -100,30 +102,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
             try
             {
-                var transaction = dataRepository.Get(x => x, x => x.UserId == userId && x.Id == transactionId);
-
-                var wallet = walletRepository.Get(w => w, w => w.Id == transaction.WalletId);
-
-                transaction.OriginWalletValue = wallet.Total;
-
-                if (transaction.DebtId.HasValue)
-                {
-                    transaction.Description = "Debt's transaction";
-                    wallet.Total -= transaction.Debt.Amount;
-                }
-
-                if (transaction.IncomeId.HasValue)
-                {
-                    transaction.Description = "Income's transaction";
-                    wallet.Total += transaction.Income.Amount;
-                }
-
-                transaction.FinalWalletValue = wallet.Total;
-                transaction.IsCompleted = true;
-                transaction.CompletedTime = DateTime.Now;
-
-                walletRepository.Update(wallet);
-                dataRepository.Update(transaction);
+                Transaction transaction = ProcessSingleTransaction(userId, transactionId);
 
                 trans.Commit();
 
@@ -136,6 +115,35 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
                 throw new Exception(ex.Message);
             }
 
+        }
+
+        public Transaction ProcessSingleTransaction(int userId, int transactionId)
+        {
+            var transaction = dataRepository.Get(x => x, x => x.UserId == userId && x.Id == transactionId);
+
+            var wallet = walletRepository.Get(w => w, w => w.Id == transaction.WalletId);
+
+            transaction.OriginWalletValue = wallet.Total;
+
+            if (transaction.DebtId.HasValue)
+            {
+                transaction.Description = "Debt's transaction";
+                wallet.Total -= transaction.Debt.Amount;
+            }
+
+            if (transaction.IncomeId.HasValue)
+            {
+                transaction.Description = "Income's transaction";
+                wallet.Total += transaction.Income.Amount;
+            }
+
+            transaction.FinalWalletValue = wallet.Total;
+            transaction.IsCompleted = true;
+            transaction.CompletedTime = DateTime.Now;
+
+            walletRepository.Update(wallet);
+            dataRepository.Update(transaction);
+            return transaction;
         }
     }    
 }
