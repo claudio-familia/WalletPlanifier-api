@@ -1,4 +1,5 @@
-﻿using WalletPlanifier.Domain.Users;
+﻿using System.Collections.Generic;
+using WalletPlanifier.Domain.Users;
 
 namespace WalletPlanifier.Domain.Transactions
 {
@@ -11,5 +12,6 @@ namespace WalletPlanifier.Domain.Transactions
 
         public User User { get; set; }
         public Frecuency Frecuency { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
     }
 }

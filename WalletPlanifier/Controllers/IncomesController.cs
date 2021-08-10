@@ -12,8 +12,17 @@ namespace WalletPlanifier.Controllers
     [Authorize]
     public class IncomesController : BaseController<Income, IncomeDto>
     {
-        public IncomesController(IBaseService<Income, IncomeDto> baseService) : base(baseService)
+        private readonly IIncomeService baseService;
+
+        public IncomesController(IIncomeService baseService) : base(baseService)
         {
+            this.baseService = baseService;
+        }
+
+        [HttpPost("{id}/transaction")]
+        public IActionResult ApplyTransaction(int id)
+        {
+            return Ok(baseService.AddTransaction(id));
         }
     }
 }

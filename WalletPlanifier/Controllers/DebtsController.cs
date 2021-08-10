@@ -12,8 +12,18 @@ namespace WalletPlanifier.Controllers
     [Authorize]
     public class DebtsController : BaseController<Debt, DebtDto>
     {
-        public DebtsController(IBaseService<Debt, DebtDto> baseService) : base(baseService)
-        {
+        private readonly IDebtService baseService;
+
+        public DebtsController(IDebtService baseService) : base(baseService)
+        {            
+            this.baseService = baseService;
         }
+
+        [HttpPost("{id}/transaction")]
+        public IActionResult ApplyTransaction(int id)
+        {
+            return Ok(baseService.AddTransaction(id));
+        }
+
     }
 }
