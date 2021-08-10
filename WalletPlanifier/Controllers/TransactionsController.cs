@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WalletPlanifier.BusinessLogic.Services.Contracts;
+using WalletPlanifier.Common.Services.Contracts;
 
 namespace WalletPlanifier.Controllers
 {
@@ -10,10 +11,18 @@ namespace WalletPlanifier.Controllers
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionService _baseService;
+        private readonly ICurrentUserService currentUserService;
 
-        public TransactionsController(ITransactionService baseService)
+        public TransactionsController(ITransactionService baseService, ICurrentUserService currentUserService)
         {
             this._baseService = baseService;
+            this.currentUserService = currentUserService;
+        }
+
+        [HttpGet()]
+        public IActionResult GetAllByClient()
+        {            
+            return Ok(_baseService.GetAllByClient(currentUserService.UserId.Value));
         }
 
         [HttpGet("{userId}")]

@@ -14,14 +14,15 @@ using WalletPlanifier.Domain.Users;
 
 namespace WalletPlanifier.BusinessLogic.Services.Transactions
 {
-    public class IncomeService : BaseService<Income, IncomeDto>, IBaseService<Income, IncomeDto>
-     {
+    public class IncomeService : BaseService<Income, IncomeDto>, IIncomeService
+    {
         private readonly IDataRepository<Income> dataRepository;
         private readonly IDataRepository<User> userRepository;
         private readonly IDataRepository<Wallet> walletRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly ICurrentUserService currentUser;
         private readonly IDataRepository<Domain.Transactions.Transaction> transactionRepository;
+        private readonly ITransactionService transactionService;
         private readonly IMapper mapper;
 
         public IncomeService(IDataRepository<Income> dataRepository,
@@ -30,6 +31,7 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
                                   IUnitOfWork unitOfWork,
                                   ICurrentUserService currentUser,
                                   IDataRepository<Domain.Transactions.Transaction> transactionRepository,
+                                  ITransactionService transactionService,
                                   IMapper mapper) : base(dataRepository, mapper)
         {
             this.dataRepository = dataRepository;
@@ -38,22 +40,23 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
             this.unitOfWork = unitOfWork;
             this.currentUser = currentUser;
             this.transactionRepository = transactionRepository;
+            this.transactionService = transactionService;
             this.mapper = mapper;
         }
 
-        public override Income Add(IncomeDto newEntity)
+        public TransactionDto AddTransaction(int id)
         {
             var trans = unitOfWork.CreateTransaction();
 
             try
             {
-                var income = base.Add(newEntity);
+                var income = dataRepository.Get(id);
 
                 var user = userRepository.Get(x => x, x => x.Id == income.UserId);
             
                 var wallets = walletRepository.GetAll(x => x, x => x.UserId == income.UserId);
 
-                transactionRepository.Add(new Domain.Transactions.Transaction()
+                var transaction = transactionRepository.Add(new Domain.Transactions.Transaction()
                 {
                     Income = income,
                     IncomeId = income.Id,
@@ -63,9 +66,11 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
                     WalletId = wallets.FirstOrDefault().Id
                 });
 
+                var result = transactionService.ProcessTransaction(income.UserId, transaction.Id);
+
                 trans.Commit();
 
-                return income;
+                return result;
 
             }
             catch (Exception ex)
@@ -85,9 +90,11 @@ namespace WalletPlanifier.BusinessLogic.Services.Transactions
 
         public override IncomeDto Get(int id)
         {
-            var result = dataRepository.Get(x => x.Include(i => i.Frecuency), x => x.Id == id);
+            var result = dataRepository.Get(x => x.Include(i => i.Frecuency).Include(x => x.Transactions), x => x.Id == id);            
 
             if (result.CreatorUserId != currentUser.UserId) throw new TypeAccessException("This resource does not belong to the requester");
+
+            //result.Transactions = transactionRepository.GetAll(x => x, i => i.IncomeId.Value == result.Id);
 
             return mapper.Map<IncomeDto>(result);
         }
